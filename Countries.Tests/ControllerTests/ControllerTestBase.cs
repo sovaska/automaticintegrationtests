@@ -1,4 +1,4 @@
-﻿using Xunit;
+using Xunit;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System;
@@ -62,20 +62,14 @@ namespace Countries.Tests.ControllerTests
             }
         }
 
-        protected async Task<Metadata> ReadMetadataAsync()
-        {
-            var metadata = await ReadActionMetadataAsync().ConfigureAwait(false);
-            return metadata;
-        }
-
         protected static Uri BuildUri(string controller, string baseUri = "http://localhost/api/", string parameters = "")
         {
             return new Uri($"{baseUri}{controller}{parameters}");
         }
 
-        private async Task<Metadata> ReadActionMetadataAsync()
+        protected async Task<Metadata> ReadMetadataAsync()
         {
-            using (var msg = new HttpRequestMessage(HttpMethod.Get, BuildUri("Metadata").ToString()))
+            using (var msg = new HttpRequestMessage(HttpMethod.Get, BuildUri("Metadata", parameters: "/metadata").ToString()))
             {
                 using (var response = await Client.SendAsync(msg).ConfigureAwait(false))
                 {
@@ -95,6 +89,32 @@ namespace Countries.Tests.ControllerTests
                     }
 
                     return JsonConvert.DeserializeObject<Metadata>(content);
+                }
+            }
+        }
+
+        protected async Task<DIMetadata> ReadDependencyInjectionMetadataAsync()
+        {
+            using (var msg = new HttpRequestMessage(HttpMethod.Get, BuildUri("Metadata", parameters: "/dependencyinjection").ToString()))
+            {
+                using (var response = await Client.SendAsync(msg).ConfigureAwait(false))
+                {
+                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        return null;
+                    }
+
+                    ValidateHeaders(response.Headers);
+
+                    var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    if (string.IsNullOrEmpty(content))
+                    {
+                        return null;
+                    }
+
+                    return JsonConvert.DeserializeObject<DIMetadata>(content);
                 }
             }
         }

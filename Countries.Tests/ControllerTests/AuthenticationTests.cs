@@ -1,4 +1,4 @@
-﻿using Xunit;
+using Xunit;
 using System.Threading.Tasks;
 using System.Net;
 using Moq;

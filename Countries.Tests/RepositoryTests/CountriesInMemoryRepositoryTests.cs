@@ -1,4 +1,4 @@
-﻿using Countries.Web.Contracts;
+using Countries.Web.Contracts;
 using Countries.Web.Models;
 using Countries.Web.Repositories;
 using System.Collections.Generic;

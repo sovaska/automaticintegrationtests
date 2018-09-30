@@ -48,6 +48,8 @@ namespace Countries.Web
             services.AddScoped<ICountriesService, CountriesService>();
 
             services.AddSingleton<IMetadataService, MetadataService>();
+
+            services.AddSingleton(services);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

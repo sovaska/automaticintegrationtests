@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Countries.Web.Contracts;
+using System.Collections.Generic;
+using Countries.Web.Models;
 
 namespace Countries.Web.Controllers
 {
@@ -14,8 +16,16 @@ namespace Countries.Web.Controllers
             _metadataService = metadataService;
         }
 
-        [HttpGet]
-        public ActionResult<Models.Metadata> GetActions()
+        [HttpGet("dependencyinjection")]
+        public ActionResult<DIMetadata> DependencyInjection()
+        {
+            var results = _metadataService.GetDependencyInjectionProblems(HttpContext.RequestServices);
+
+            return Ok(results);
+        }
+
+        [HttpGet("actions")]
+        public ActionResult<Metadata> GetActions()
         {
             var result = _metadataService.GetMetadata();
             if (result == null)
